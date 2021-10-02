@@ -1,6 +1,5 @@
-﻿using System.Windows;
-using ShibaReader.Utils;
-using ShibaReader.Processors;
+﻿using ShibaReader.Controllers;
+using System.Windows;
 
 namespace ShibaReader
 {
@@ -9,18 +8,17 @@ namespace ShibaReader
     /// </summary>
     public partial class MainWindow : Window
     {
+        MainWindowController controller;
         public MainWindow()
         {
             InitializeComponent();
+            controller = new MainWindowController();
+
         }
 
         private void ImportBtn_Click(object sender, RoutedEventArgs e)
         {
-            string fileName = FileUtils.openFileChooser();
-            if (fileName == null) return;
-
-            JILProcessor jilProc = new JILProcessor(fileName);
-            jilProc.processJILFile();
+            controller.importJILFile();
         }
 
         
