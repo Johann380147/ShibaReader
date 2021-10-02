@@ -15,7 +15,7 @@ namespace ShibaReader.Processors
             this.FileName = fileName;
         }
 
-        public void processJILFile()
+        public Dictionary<string, AutoSysJob> processJILFile()
         {
             Dictionary<string, AutoSysJob> autoSysJobs = new Dictionary<string, AutoSysJob>();
             try
@@ -304,6 +304,7 @@ namespace ShibaReader.Processors
             {
                 MessageBox.Show("File not found!");
             }
+            return autoSysJobs;
         }
 
         private string extractParameterValue(string parameter, string ignoreText)
