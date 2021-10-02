@@ -1,0 +1,20 @@
+﻿<Window x:Class="ShibaReader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ShibaReader"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="750" Width="1000"
+        Icon="ShibaReader.ico">
+    <DockPanel LastChildFill="True">
+        
+        <Grid DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+            <Button x:Name="ImportBtn" Width="80" HorizontalAlignment="Left" Click="ImportBtn_Click">Import</Button>
+        </Grid>
+        <Grid>
+            
+        </Grid>
+    </DockPanel>
+    
+</Window>

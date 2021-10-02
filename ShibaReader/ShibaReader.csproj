@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>ShibaReader.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ShibaReader.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ShibaReader.ico" />
+  </ItemGroup>
+
+</Project>
