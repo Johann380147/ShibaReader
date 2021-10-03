@@ -4,15 +4,20 @@ using System.IO;
 using System.Windows;
 using System.Collections.Generic;
 using System;
+using ShibaReader.Utils;
+using ShibaReader.Events;
+using System.Collections.ObjectModel;
 
 namespace ShibaReader.Processors
 {
     class JILProcessor
     {
         public string FileName { get; set; }
+        private UpdateImportJobEvent jobEvent = null;
         public JILProcessor(string fileName)
         {
             this.FileName = fileName;
+            jobEvent = UpdateImportJobEvent.getInstance();
         }
 
         public Dictionary<string, AutoSysJob> processJILFile()
@@ -20,11 +25,13 @@ namespace ShibaReader.Processors
             Dictionary<string, AutoSysJob> autoSysJobs = new Dictionary<string, AutoSysJob>();
             try
             {
+                int totalLineCount = FileUtils.getLineCount(FileName);
+                int currLineCount = 0;
                 using (var reader = new StreamReader(FileName))
                 {
                     AutoSysJob job = null;
                     string line = reader.ReadLine()?.Trim();
-                    while (line != null && line != "")
+                    while (line != null)
                     {
                         // Job Name
                         if (line.StartsWith("/*"))
@@ -42,12 +49,12 @@ namespace ShibaReader.Processors
                                 autoSysJobs.Add(tokens[2], job);
                             }
                         }
-                        else if (job != null)
+                        else if (job != null && line != "")
                         {
                             if (line.StartsWith("insert_job"))
                             {
                                 string param = extractParameterValue(line, "insert_job");
-                                param = extractParameterValue(line, "job_type");
+                                param = extractParameterValue(param, "job_type");
                                 string[] paramTokens = param.Split(" ");
                                 bool firstParamFilled = false;
                                 for (int i = 0; i < paramTokens.Length; i++)
@@ -63,6 +70,7 @@ namespace ShibaReader.Processors
                                         else
                                         {
                                             job.JobType = paramToken;
+                                            break;
                                         }
                                     }
                                 }
@@ -192,15 +200,17 @@ namespace ShibaReader.Processors
                                     default:
                                         break;
                                 }
-                                string conditionJobText = param.Substring(2, param.Length - 2);
+                                string conditionJobText = param.Substring(2, param.Length - 3);
                                 if (autoSysJobs.ContainsKey(conditionJobText))
                                 {
-                                    job.RunCondition = new Tuple<Enums.JobStatus, AutoSysJob>(conditionType, autoSysJobs[conditionJobText]);
+                                    job.RunCondition = new ObservableCollection<Tuple<Enums.JobStatus, AutoSysJob>>();
+                                    job.RunCondition.Add(new Tuple<Enums.JobStatus, AutoSysJob>(conditionType, autoSysJobs[conditionJobText]));
                                 }
                                 else
                                 {
                                     autoSysJobs.Add(conditionJobText, new AutoSysJob(conditionJobText));
-                                    job.RunCondition = new Tuple<Enums.JobStatus, AutoSysJob>(conditionType, autoSysJobs[conditionJobText]);
+                                    job.RunCondition = new ObservableCollection<Tuple<Enums.JobStatus, AutoSysJob>>();
+                                    job.RunCondition.Add(new Tuple<Enums.JobStatus, AutoSysJob>(conditionType, autoSysJobs[conditionJobText]));
                                 }
                             }
                             else if (line.StartsWith("description"))
@@ -297,7 +307,11 @@ namespace ShibaReader.Processors
                                 }
                             }
                         }
+                        currLineCount++;
+                        jobEvent.Progress = currLineCount / totalLineCount;
+                        line = reader.ReadLine()?.Trim();
                     }
+                    jobEvent.TaskComplete();
                 }
             }
             catch (FileNotFoundException e)
