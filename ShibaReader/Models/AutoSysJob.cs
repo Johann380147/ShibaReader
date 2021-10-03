@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using ShibaReader.Common;
 
 namespace ShibaReader.Models
@@ -34,7 +33,7 @@ namespace ShibaReader.Models
      * notification_emailaddress_on_alarm: 97731360@10.152.193.10;97421484@10.152.193.10;98764709@10.152.193.10;93406076@10.152.193.10;87547468@10.152.193.10;90927008@10.152.193.10;90469259@10.152.193.10;88120262@10.152.193.10
      *
      */
-    public class AutoSysJob
+    class AutoSysJob
     {
         public string JobName { get; set; }
         public string InsertJob { get; set; }
@@ -42,13 +41,13 @@ namespace ShibaReader.Models
         public string Command { get; set; }
         public string Machine { get; set; }
         public string Owner { get; set; }
-        public List<Enums.Permission> Permissions { get; set; } = new List<Enums.Permission>();
+        public List<Enums.Permission> Permissions { get; set; }
         public bool HasDateConditions { get; set; }
-        public List<Enums.DaysOfWeek> DaysToRun { get; set; } = new List<Enums.DaysOfWeek>();
-        public List<string> RunSchedule { get; set; } = new List<string>();
-        public List<string> ExcludeSchedule { get; set; } = new List<string>();
+        public List<Enums.DaysOfWeek> DaysToRun { get; set; }
+        public List<string> RunSchedule { get; set; }
+        public List<string> ExcludeSchedule { get; set; }
         public string StartTime { get; set; }
-        public ObservableCollection<Tuple<Enums.JobStatus, AutoSysJob>> RunCondition { get; set; }
+        public Tuple<Enums.JobStatus, AutoSysJob> RunCondition { get; set; }
         public string Description { get; set; }
         public string JobLogFile { get; set; }
         public string JobErrorFile { get; set; }
@@ -57,9 +56,9 @@ namespace ShibaReader.Models
         public string Application { get; set; }
         public Enums.SendAlert SendNotificationOn { get; set; }
         public string NotificationTemplate { get; set; }
-        public List<Enums.NotificationAlarmType> NotificationAlarmTypes { get; set; } = new List<Enums.NotificationAlarmType>();
-        public List<string> EmailAddressesOnFailure { get; set; } = new List<string>();
-        public List<string> EmailAddressesOnAlarm { get; set; } = new List<string>();
+        public List<Enums.NotificationAlarmType> NotificationAlarmTypes { get; set; }
+        public List<string> EmailAddressesOnFailure { get; set; }
+        public List<string> EmailAddressesOnAlarm { get; set; }
 
         private AutoSysJob() { }
         public AutoSysJob(string jobName)
