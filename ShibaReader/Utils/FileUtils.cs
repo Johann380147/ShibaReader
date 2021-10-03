@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
 
 namespace ShibaReader.Utils
 {
@@ -17,6 +18,16 @@ namespace ShibaReader.Utils
                 return fileDialog.FileName;
             }
             return null;
+        }
+        
+        public static int getLineCount(string filePath)
+        {
+            using (StreamReader r = new StreamReader(filePath))
+            {
+                int i = 0;
+                while (r.ReadLine() != null) { i++; }
+                return i;
+            }
         }
     }
 }
