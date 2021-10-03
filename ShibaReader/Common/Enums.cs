@@ -1,6 +1,6 @@
 ﻿namespace ShibaReader.Common
 {
-    class Enums
+    public class Enums
     {
         public enum DaysOfWeek 
         {
