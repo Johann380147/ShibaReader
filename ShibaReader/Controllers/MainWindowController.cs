@@ -28,7 +28,7 @@ namespace ShibaReader.Controllers
             if (fileName == null) return;
 
             CALProcessor calProc = new CALProcessor(fileName);
-
+            calendarDates = calProc.processCALFile();
         }
 
         public AutoSysJob getCurrJob()
@@ -54,6 +54,9 @@ namespace ShibaReader.Controllers
 
         public AutoSysJob searchJob(string jobName)
         {
+            if (autoSysJobs == null) return null;
+
+            currentIndex = 0;
             if (autoSysJobs.ContainsKey(jobName))
             {
                 matchedJobs.Clear();
@@ -61,7 +64,7 @@ namespace ShibaReader.Controllers
             }
             else
             {
-                matchedJobs = autoSysJobs.Keys.Where(k => k.Contains(jobName)).ToList();
+                matchedJobs = autoSysJobs.Keys.Where(k => k.ToLower().Contains(jobName.ToLower())).ToList();
             }
             return getCurrJob();
         }
