@@ -6,10 +6,10 @@ namespace ShibaReader.Utils
 {
     static class FileUtils
     {
-        public static string openFileChooser()
+        public static string OpenFileChooser(string filter)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Jil files (*.jil)|*.jil|All files (*.*)|*.*";
+            fileDialog.Filter = filter;
             fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             bool? result = fileDialog.ShowDialog();
@@ -20,7 +20,7 @@ namespace ShibaReader.Utils
             return null;
         }
         
-        public static int getLineCount(string filePath)
+        public static int GetLineCount(string filePath)
         {
             using (StreamReader r = new StreamReader(filePath))
             {

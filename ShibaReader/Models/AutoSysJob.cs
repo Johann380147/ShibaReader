@@ -45,8 +45,8 @@ namespace ShibaReader.Models
         public List<Enums.Permission> Permissions { get; set; } = new List<Enums.Permission>();
         public bool HasDateConditions { get; set; }
         public List<Enums.DaysOfWeek> DaysToRun { get; set; } = new List<Enums.DaysOfWeek>();
-        public List<string> RunSchedule { get; set; } = new List<string>();
-        public List<string> ExcludeSchedule { get; set; } = new List<string>();
+        public string RunSchedule { get; set; }
+        public string ExcludeSchedule { get; set; }
         public string StartTime { get; set; }
         public ObservableCollection<Tuple<Enums.JobStatus, AutoSysJob>> RunCondition { get; set; }
         public string Description { get; set; }

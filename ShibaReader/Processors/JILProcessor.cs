@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace ShibaReader.Processors
 {
-    class JILProcessor
+    class JILProcessor : Processor
     {
         public string FileName { get; set; }
         private UpdateImportJobEvent jobEvent = null;
@@ -20,12 +20,12 @@ namespace ShibaReader.Processors
             jobEvent = UpdateImportJobEvent.getInstance();
         }
 
-        public Dictionary<string, AutoSysJob> processJILFile()
+        public Dictionary<string, AutoSysJob> ProcessJILFile()
         {
             Dictionary<string, AutoSysJob> autoSysJobs = new Dictionary<string, AutoSysJob>();
             try
             {
-                int totalLineCount = FileUtils.getLineCount(FileName);
+                int totalLineCount = FileUtils.GetLineCount(FileName);
                 int currLineCount = 0;
                 using (var reader = new StreamReader(FileName))
                 {
@@ -53,8 +53,8 @@ namespace ShibaReader.Processors
                         {
                             if (line.StartsWith("insert_job"))
                             {
-                                string param = extractParameterValue(line, "insert_job");
-                                param = extractParameterValue(param, "job_type");
+                                string param = ExtractParameterValue(line, "insert_job");
+                                param = ExtractParameterValue(param, "job_type");
                                 string[] paramTokens = param.Split(" ");
                                 bool firstParamFilled = false;
                                 for (int i = 0; i < paramTokens.Length; i++)
@@ -77,22 +77,22 @@ namespace ShibaReader.Processors
                             }
                             else if (line.StartsWith("command"))
                             {
-                                string param = extractParameterValue(line, "command");
+                                string param = ExtractParameterValue(line, "command");
                                 job.Command = param;
                             }
                             else if (line.StartsWith("machine"))
                             {
-                                string param = extractParameterValue(line, "machine");
+                                string param = ExtractParameterValue(line, "machine");
                                 job.Machine = param;
                             }
                             else if (line.StartsWith("owner"))
                             {
-                                string param = extractParameterValue(line, "owner");
+                                string param = ExtractParameterValue(line, "owner");
                                 job.Owner = param;
                             }
                             else if (line.StartsWith("permission"))
                             {
-                                string param = extractParameterValue(line, "permission");
+                                string param = ExtractParameterValue(line, "permission");
                                 string[] paramTokens = param.Split(",");
                                 for (int i = 0; i < paramTokens.Length; i++)
                                 {
@@ -124,12 +124,12 @@ namespace ShibaReader.Processors
                             }
                             else if (line.StartsWith("date_conditions"))
                             {
-                                string param = extractParameterValue(line, "date_conditions");
+                                string param = ExtractParameterValue(line, "date_conditions");
                                 job.HasDateConditions = param == "0" ? false : true;
                             }
                             else if (line.StartsWith("days_of_week"))
                             {
-                                string param = extractParameterValue(line, "days_of_week");
+                                string param = ExtractParameterValue(line, "days_of_week");
                                 string[] paramTokens = param.Split(",");
                                 for (int i = 0; i < paramTokens.Length; i++)
                                 {
@@ -164,20 +164,22 @@ namespace ShibaReader.Processors
                             }
                             else if (line.StartsWith("run_calendar"))
                             {
-                                string param = extractParameterValue(line, "run_calendar");
+                                string param = ExtractParameterValue(line, "run_calendar");
+                                job.RunSchedule = param;
                             }
                             else if (line.StartsWith("exclude_calendar"))
                             {
-                                string param = extractParameterValue(line, "exclude_calendar");
+                                string param = ExtractParameterValue(line, "exclude_calendar");
+                                job.ExcludeSchedule = param;
                             }
                             else if (line.StartsWith("start_times"))
                             {
-                                string param = extractParameterValue(line, "start_times");
+                                string param = ExtractParameterValue(line, "start_times");
                                 job.StartTime = param;
                             }
                             else if (line.StartsWith("condition"))
                             {
-                                string param = extractParameterValue(line, "condition");
+                                string param = ExtractParameterValue(line, "condition");
                                 string conditionTypeText = param.Substring(0, 1);
                                 Enums.JobStatus conditionType = Enums.JobStatus.Success;
                                 switch (conditionTypeText)
@@ -215,37 +217,37 @@ namespace ShibaReader.Processors
                             }
                             else if (line.StartsWith("description"))
                             {
-                                string param = extractParameterValue(line, "description");
+                                string param = ExtractParameterValue(line, "description");
                                 job.Description = param;
                             }
                             else if (line.StartsWith("std_out_file"))
                             {
-                                string param = extractParameterValue(line, "std_out_file");
+                                string param = ExtractParameterValue(line, "std_out_file");
                                 job.JobLogFile = param;
                             }
                             else if (line.StartsWith("std_err_file"))
                             {
-                                string param = extractParameterValue(line, "std_err_file");
+                                string param = ExtractParameterValue(line, "std_err_file");
                                 job.JobErrorFile = param;
                             }
                             else if (line.StartsWith("alarm_if_fail"))
                             {
-                                string param = extractParameterValue(line, "alarm_if_fail");
+                                string param = ExtractParameterValue(line, "alarm_if_fail");
                                 job.AlarmIfFail = param == "0" ? false : true;
                             }
                             else if (line.StartsWith("alarm_if_terminated"))
                             {
-                                string param = extractParameterValue(line, "alarm_if_terminated");
+                                string param = ExtractParameterValue(line, "alarm_if_terminated");
                                 job.AlarmIfTerminated = param == "0" ? false : true;
                             }
                             else if (line.StartsWith("application"))
                             {
-                                string param = extractParameterValue(line, "application");
+                                string param = ExtractParameterValue(line, "application");
                                 job.Application = param;
                             }
                             else if (line.StartsWith("send_notification"))
                             {
-                                string param = extractParameterValue(line, "send_notification");
+                                string param = ExtractParameterValue(line, "send_notification");
                                 if (param == "y" || param == "1")
                                 {
                                     job.SendNotificationOn = Enums.SendAlert.Yes;
@@ -261,12 +263,12 @@ namespace ShibaReader.Processors
                             }
                             else if (line.StartsWith("notification_template"))
                             {
-                                string param = extractParameterValue(line, "notification_template");
+                                string param = ExtractParameterValue(line, "notification_template");
                                 job.NotificationTemplate = param;
                             }
                             else if (line.StartsWith("notification_emailaddress_on_failure"))
                             {
-                                string param = extractParameterValue(line, "notification_emailaddress_on_failure");
+                                string param = ExtractParameterValue(line, "notification_emailaddress_on_failure");
                                 string separator = param.Contains(";") ? ";" : ",";
                                 string[] emailAddresses = param.Split(separator);
                                 for (int i = 0; i < emailAddresses.Length; i++)
@@ -280,7 +282,7 @@ namespace ShibaReader.Processors
                             }
                             else if (line.StartsWith("notification_alarm_types"))
                             {
-                                string param = extractParameterValue(line, "notification_alarm_types");
+                                string param = ExtractParameterValue(line, "notification_alarm_types");
                                 string separator = param.Contains(";") ? ";" : ",";
                                 string[] alarmTypes = param.Split(separator);
                                 for (int i = 0; i < alarmTypes.Length; i++)
@@ -294,7 +296,7 @@ namespace ShibaReader.Processors
                             }
                             else if (line.StartsWith("notification_emailaddress_on_alarm"))
                             {
-                                string param = extractParameterValue(line, "notification_emailaddress_on_alarm");
+                                string param = ExtractParameterValue(line, "notification_emailaddress_on_alarm");
                                 string separator = param.Contains(";") ? ";" : ",";
                                 string[] emailAddresses = param.Split(separator);
                                 for (int i = 0; i < emailAddresses.Length; i++)
@@ -319,11 +321,6 @@ namespace ShibaReader.Processors
                 MessageBox.Show("File not found!");
             }
             return autoSysJobs;
-        }
-
-        private string extractParameterValue(string parameter, string ignoreText)
-        {
-            return parameter.Replace(ignoreText + ":", "").Trim();
         }
     }
 }

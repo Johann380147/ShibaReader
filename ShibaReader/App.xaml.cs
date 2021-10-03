@@ -13,5 +13,19 @@ namespace ShibaReader
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            ApplicationProperties.InitializeDefaultProperties(this);
+        }
+
+        private void App_Startup(object sender, StartupEventArgs e)
+        {
+            ApplicationProperties.RetrieveProperties(this);
+        }
+
+        private void App_Exit(object sender, ExitEventArgs e)
+        {
+            ApplicationProperties.SaveProperties(this);
+        }
     }
 }

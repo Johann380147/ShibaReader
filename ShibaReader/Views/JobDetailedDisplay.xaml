@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ShibaReader.Views.JobDetailed"
+﻿<UserControl x:Class="ShibaReader.Views.JobDetailedDisplay"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -25,7 +25,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Command</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="commandText" Style="{StaticResource selectableLabel}" Text="{Binding Command, TargetNullValue='-'}"/>
+                    <TextBox x:Name="commandText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.Command, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -35,7 +35,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Start time:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="startTimeText" Style="{StaticResource selectableLabel}" Text="{Binding StartTime, TargetNullValue='-'}"/>
+                    <TextBox x:Name="startTimeText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.StartTime, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -45,7 +45,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Days Ran:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding DaysToRun}" KeyUp="ListBox_KeyUp"></ListBox>
+                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.DaysToRun}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
                 </Label>
             </Grid>
             <Grid>
@@ -55,7 +55,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Schedule:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding RunSchedule}" KeyUp="ListBox_KeyUp"></ListBox>
+                    <Button Style="{StaticResource LinkButton}" Content="{Binding AutoSysJob.RunSchedule}" Click="ScheduleBtn_Click"/>
                 </Label>
             </Grid>
             <Grid>
@@ -65,7 +65,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Excluding:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding ExcludeSchedule}" KeyUp="ListBox_KeyUp"></ListBox>
+                    <Button Grid.Column="1" Style="{StaticResource LinkButton}" Content="{Binding AutoSysJob.ExcludeSchedule}" Click="ExcludeCalBtn_Click"/>
                 </Label>
             </Grid>
             <Grid>
@@ -75,8 +75,9 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Condition:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding RunCondition}" KeyUp="ListBox_KeyUp">
-                        <ListBox.ItemTemplate>
+                    <ItemsControl Style="{StaticResource labelItemsControl}" ItemsSource="{Binding AutoSysJob.RunCondition}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel">
+
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -84,11 +85,11 @@
                                         <ColumnDefinition SharedSizeGroup="JobName" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Margin="2" Text="{Binding Item1}" Grid.Column="0"/>
-                                    <TextBlock Margin="2" Text="{Binding Item2.JobName}" Grid.Column="1"/>
+                                    <Button Margin="2" Style="{StaticResource LinkButton}" Content="{Binding Item2.JobName}" Grid.Column="1" Click="LinkedJobBtn_Click"/>
                                 </Grid>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Label>
             </Grid>
             <Grid>
@@ -98,7 +99,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Log location:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="logLocationText" Style="{StaticResource selectableLabel}" Text="{Binding JobLogFile, TargetNullValue='-'}"/>
+                    <TextBox x:Name="logLocationText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.JobLogFile, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -108,7 +109,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Error location:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="errorLocationText" Style="{StaticResource selectableLabel}" Text="{Binding JobErrorFile, TargetNullValue='-'}"/>
+                    <TextBox x:Name="errorLocationText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.JobErrorFile, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -118,7 +119,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Email Address (Fail):</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding EmailAddressesOnFailure}" KeyUp="ListBox_KeyUp"></ListBox>
+                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.EmailAddressesOnFailure}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
 
                 </Label>
             </Grid>
@@ -129,7 +130,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Email Address (Alarm):</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding EmailAddressesOnAlarm}" KeyUp="ListBox_KeyUp"></ListBox>
+                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.EmailAddressesOnAlarm}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
                 </Label>
             </Grid>
         </StackPanel>
@@ -141,7 +142,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Application:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="applicationText" Style="{StaticResource selectableLabel}" Text="{Binding Application, TargetNullValue='-'}"/>
+                    <TextBox x:Name="applicationText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.Application, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -151,7 +152,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Machine:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="machineText" Style="{StaticResource selectableLabel}" Text="{Binding Machine, TargetNullValue='-'}"/>
+                    <TextBox x:Name="machineText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.Machine, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -161,7 +162,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Owner:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="ownerText" Style="{StaticResource selectableLabel}" Text="{Binding Owner, TargetNullValue='-'}"/>
+                    <TextBox x:Name="ownerText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.Owner, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -171,7 +172,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Permissions:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding Permissions}" KeyUp="ListBox_KeyUp"></ListBox>
+                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.Permissions}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
                 </Label>
             </Grid>
             <Grid>
@@ -181,7 +182,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Job Type:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="jobTypeText" Style="{StaticResource selectableLabel}" Text="{Binding JobType, TargetNullValue='-'}"/>
+                    <TextBox x:Name="jobTypeText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.JobType, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -191,7 +192,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Insert job:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="insertJobText" Style="{StaticResource selectableLabel}" Text="{Binding InsertJob, TargetNullValue='-'}"/>
+                    <TextBox x:Name="insertJobText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.InsertJob, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -201,7 +202,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Description:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="descriptionText" Style="{StaticResource selectableLabel}" Text="{Binding Description, TargetNullValue='-'}"/>
+                    <TextBox x:Name="descriptionText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.Description, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -211,7 +212,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Alarm on fail:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="alarmFailText" Style="{StaticResource selectableLabel}" Text="{Binding AlarmIfFail, TargetNullValue='-'}"/>
+                    <TextBox x:Name="alarmFailText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.AlarmIfFail, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -221,7 +222,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Alarm on terminated:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="alarmTermText" Style="{StaticResource selectableLabel}" Text="{Binding AlarmIfTerminated, TargetNullValue='-'}"/>
+                    <TextBox x:Name="alarmTermText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.AlarmIfTerminated, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -231,7 +232,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Send notification:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox Style="{StaticResource selectableLabel}" Text="{Binding SendNotificationOn, TargetNullValue='-'}"/>
+                    <TextBox Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.SendNotificationOn, TargetNullValue='-'}"/>
                 </Label>
             </Grid>
             <Grid>
@@ -241,7 +242,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Send alarm:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding NotificationAlarmTypes}" KeyUp="ListBox_KeyUp"></ListBox>
+                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.NotificationAlarmTypes}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
                 </Label>
             </Grid>
             <Grid>
@@ -251,7 +252,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Notification template:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="notifTemplateText" Style="{StaticResource selectableLabel}" Text="{Binding NotificationTemplate, TargetNullValue='-'}"></TextBox>
+                    <TextBox x:Name="notifTemplateText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.NotificationTemplate, TargetNullValue='-'}"></TextBox>
                 </Label>
             </Grid>
         </StackPanel>

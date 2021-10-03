@@ -18,9 +18,21 @@ namespace ShibaReader.Views
     /// <summary>
     /// Interaction logic for JobDetailed.xaml
     /// </summary>
-    public partial class JobDetailed : UserControl
+    public partial class JobDetailedDisplay : UserControl
     {
-        public JobDetailed()
+        public static readonly RoutedEvent LinkedJobClickEvent =
+        EventManager.RegisterRoutedEvent("LinkedJobClickEvent", RoutingStrategy.Bubble,
+        typeof(RoutedEventHandler), typeof(Button));
+
+        public static readonly RoutedEvent ExcludeCalClickEvent =
+        EventManager.RegisterRoutedEvent("ExcludeCalClickEvent", RoutingStrategy.Bubble,
+        typeof(RoutedEventHandler), typeof(Button));
+
+        public static readonly RoutedEvent ScheduleClickEvent =
+        EventManager.RegisterRoutedEvent("ScheduleClickEvent", RoutingStrategy.Bubble,
+        typeof(RoutedEventHandler), typeof(Button));
+
+        public JobDetailedDisplay()
         {
             InitializeComponent();
         }
@@ -31,6 +43,56 @@ namespace ShibaReader.Views
             {
                 Clipboard.SetText(((ListBox)sender).SelectedItem.ToString());
             }
+            else
+            {
+                e.Handled = false;
+            }
+        }
+
+        private void HandlePreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
+            }
+        }
+
+        public event RoutedEventHandler LinkedJobBtnClicked
+        {
+            add { AddHandler(LinkedJobClickEvent, value); }
+            remove { RemoveHandler(LinkedJobClickEvent, value); }
+        }
+
+        public event RoutedEventHandler ExcludeCalBtnClicked
+        {
+            add { AddHandler(ExcludeCalClickEvent, value); }
+            remove { RemoveHandler(ExcludeCalClickEvent, value); }
+        }
+
+        public event RoutedEventHandler ScheduleBtnClicked
+        {
+            add { AddHandler(ScheduleClickEvent, value); }
+            remove { RemoveHandler(ScheduleClickEvent, value); }
+        }
+
+        private void LinkedJobBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(JobDetailedDisplay.LinkedJobClickEvent, e.Source));
+        }
+
+        private void ExcludeCalBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(JobDetailedDisplay.ExcludeCalClickEvent, e.Source));
+        }
+        
+        private void ScheduleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(JobDetailedDisplay.ScheduleClickEvent, e.Source));
         }
     }
 }
