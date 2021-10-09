@@ -9,18 +9,20 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="ShibaReader" Height="750" Width="1000"
         Icon="ShibaReader.ico"
+        Background="#efebe9"
         Closing="Window_Closing">
     <DockPanel LastChildFill="True">
 
         <Grid Height="23" DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-            <Menu VerticalAlignment="Stretch" VerticalContentAlignment="Center">
+
+            <Menu VerticalAlignment="Stretch" VerticalContentAlignment="Center" Background="#d7ccc8">
                 <MenuItem Header="Import">
                     <MenuItem x:Name="JILImportBtn" Header="JIL File" Click="JILImportBtn_Click"></MenuItem>
                     <MenuItem x:Name="CALImportBtn" Header="Calendar File" Click="CALImportBtn_Click"></MenuItem>
                 </MenuItem>
             </Menu>
         </Grid>
-        <StatusBar DockPanel.Dock="Bottom" Padding="3">
+        <StatusBar DockPanel.Dock="Bottom" Padding="3" Background="#d7ccc8">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -39,7 +41,7 @@
             <StatusBarItem HorizontalAlignment="Left">
                 <Label x:Name="hoverDetailText"></Label>
             </StatusBarItem>
-            <StatusBarItem Grid.Column="2" HorizontalAlignment="Right">
+            <StatusBarItem x:Name="StatusBar" Grid.Column="2" HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
                     <Label Margin="0,0,5,0" VerticalAlignment="Center">Status:</Label>
                     <ProgressBar x:Name="progressBar" Width="140" Height="15" Margin="0,0,10,0"/>
@@ -62,33 +64,45 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label VerticalAlignment="Center" FontSize="14" Grid.Column="0">Jobs:</Label>
-                    <Label VerticalAlignment="Center" FontSize="14" Grid.Column="1">
+                    <Label VerticalAlignment="Center" FontSize="12" Grid.Column="0">Jobs:</Label>
+                    <Label VerticalAlignment="Center" FontSize="11" FontStyle="Italic" Grid.Column="1">
                         <TextBlock Text="{Binding NumOfJobs}"/>
                     </Label>
-                    <Label VerticalAlignment="Center" FontSize="14" Grid.Column="2">Calendars:</Label>
-                    <Label VerticalAlignment="Center" FontSize="14" Grid.Column="3">
+                    <Label VerticalAlignment="Center" FontSize="12" Grid.Column="2">Calendars:</Label>
+                    <Label VerticalAlignment="Center" FontSize="11" FontStyle="Italic" Grid.Column="3">
                         <TextBlock Text="{Binding NumOfCalendars}"/>
                     </Label>
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                    <Label VerticalAlignment="Center" FontSize="14">Search:</Label>
-                    <TextBox x:Name="SearchText" Width="300" Height="30" Padding="3" VerticalAlignment="Center" VerticalContentAlignment="Center"  Margin="10,10,10,10" KeyUp="SearchText_KeyUp"></TextBox>
-                    <Button x:Name="PrevJobBtn" Width="30" Height="30" Margin="0,0,5,0" IsEnabled="False" Click="PrevJobBtn_Click">▲</Button>
-                    <Button x:Name="NextJobBtn" Width="30" Height="30" Margin="0,0,15,0" IsEnabled="False" Click="NextJobBtn_Click">▼</Button>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right" FocusManager.FocusedElement="{Binding ElementName=SearchText}">
+                    <TextBox x:Name="SearchText" Style="{StaticResource WatermarkedTextBox}" Tag="Search" Width="300" Height="30" Padding="3" VerticalAlignment="Center" VerticalContentAlignment="Center"  Margin="10,10,10,10" KeyUp="SearchText_KeyUp"></TextBox>
+                    <Button x:Name="PrevJobBtn" Style="{StaticResource IconButton}" Width="30" Height="30" Margin="0,0,5,0" IsEnabled="False" Click="PrevJobBtn_Click">▲</Button>
+                    <Button x:Name="NextJobBtn" Style="{StaticResource IconButton}" Width="30" Height="30" Margin="0,0,15,0" IsEnabled="False" Click="NextJobBtn_Click">▼</Button>
                 </StackPanel>
             </Grid>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Grid.Column="1" Style="{StaticResource LinkButton}" HorizontalAlignment="Left" Margin="0,0,15,0" Padding="3,0,3,0">Advanced search</Button>
-                <Label Width="120"/>
-                <Label Width="150" HorizontalContentAlignment="Right" Margin="0,0,15,0">
-                    <TextBox Style="{StaticResource selectableLabel}" Text="{Binding CurrentPositionText}"/>
-                </Label>
-            </StackPanel>
+            <DockPanel LastChildFill="True">
+                <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
+                    <Button x:Name="UndoJobBtn" Style="{StaticResource IconButton}" MinWidth="40" IsEnabled="False" Click="UndoJobBtn_Click">
+                        <Image Source="Resources/previous-arrow.png" Width="40" Height="30" Stretch="Uniform"/>
+                    </Button>
+                    <Button x:Name="RedoJobBtn" Style="{StaticResource IconButton}"  MinWidth="40" Margin="15,0,0,0" IsEnabled="False" Click="RedoJobBtn_Click">
+                        <Image Source="Resources/next-arrow.png" Width="40" Height="30" Stretch="Uniform"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource LinkButton}" HorizontalAlignment="Left" Margin="0,0,15,0" Padding="3,0,3,0">Advanced search</Button>
+                    <Label Width="120"/>
+                    <Label Width="150" HorizontalContentAlignment="Right" Margin="0,0,15,0">
+                        <TextBox Style="{StaticResource selectableLabel}" Text="{Binding CurrentPositionText}"/>
+                    </Label>
+                </StackPanel>
+            </DockPanel>
+            
+            
             <Label x:Name="jobNameText" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" MinHeight="42">
                 <TextBox Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.JobName}"></TextBox>
             </Label>
+            <Separator/>
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel CanVerticallyScroll="True">

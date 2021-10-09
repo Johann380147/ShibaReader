@@ -84,6 +84,18 @@ namespace ShibaReader
             NumOfCalendars = controller.ImportCALFile();
         }
 
+        private void UndoJobBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AutoSysJob = controller.UndoJob();
+            UpdateUI();
+        }
+
+        private void RedoJobBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AutoSysJob = controller.RedoJob();
+            UpdateUI();
+        }
+
         private void PrevJobBtn_Click(object sender, RoutedEventArgs e)
         {
             AutoSysJob = controller.GetPrevJob();
@@ -136,6 +148,8 @@ namespace ShibaReader
         {
             EnableDisablePrevNextJobBtns();
             UpdateSearchPostionText();
+            RedoJobBtn.IsEnabled = controller.HasRedo();
+            UndoJobBtn.IsEnabled = controller.HasUndo();
         }
 
         private void UpdateSearchPostionText()

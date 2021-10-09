@@ -15,6 +15,9 @@ namespace ShibaReader.Controllers
         private Dictionary<string, Calendar> calendarDates = new Dictionary<string, Calendar>();
         private List<string> matchedJobs = new List<string>();
         private int currentIndex = 0;
+        private HistoryLinkedList historyList = new();
+
+        public string CurrentSearchText { get; set; }
         public int CurrentIndex 
         { 
             get => currentIndex;
@@ -63,11 +66,29 @@ namespace ShibaReader.Controllers
             return calendarDates.Count;
         }
 
-        public AutoSysJob GetCurrJob()
+        private AutoSysJob GetJobByName(string name)
         {
-            if (matchedJobs.Count == 0) return null;
+            if (!autoSysJobs.ContainsKey(name)) return null;
+            return autoSysJobs[name];
+        }
 
-            return autoSysJobs[matchedJobs[CurrentIndex]];
+        public AutoSysJob GetJobByIndex(int index)
+        {
+            if (matchedJobs.Count == 0 || index >= matchedJobs.Count)
+            {   
+                return null;
+            }
+            return autoSysJobs[matchedJobs[index]];
+        }
+
+        private AutoSysJob RestoreJob(History node)
+        {
+            if (node != null)
+            {
+                RestoreProperties(node);
+                return GetJobByIndex(node.CurrentIndex);
+            }
+            return null;
         }
 
         public AutoSysJob GetPrevJob()
@@ -76,7 +97,9 @@ namespace ShibaReader.Controllers
 
             if (CurrentIndex - 1 >= 0)
             {
-                return autoSysJobs[matchedJobs[--CurrentIndex]];
+                CurrentIndex--;
+                historyList.Current.CurrentIndex = CurrentIndex;
+                return GetJobByIndex(CurrentIndex);
             }
             return null;
         }
@@ -87,14 +110,17 @@ namespace ShibaReader.Controllers
 
             if (CurrentIndex + 1 < matchedJobs.Count)
             {
-                return autoSysJobs[matchedJobs[++CurrentIndex]];
+
+                CurrentIndex++;
+                historyList.Current.CurrentIndex = CurrentIndex;
+                return GetJobByIndex(CurrentIndex);
             }
             return null;
         }
 
         public AutoSysJob SearchJob(string jobName)
         {
-            if (autoSysJobs == null) return null;
+            if (autoSysJobs == null || jobName == "") return null;
 
             if (autoSysJobs.ContainsKey(jobName))
             {
@@ -105,9 +131,43 @@ namespace ShibaReader.Controllers
             {
                 matchedJobs = autoSysJobs.Keys.Where(k => k.ToLower().Contains(jobName.ToLower())).ToList();
             }
+            
             CurrentIndex = 0;
             MatchedJobsCount = matchedJobs.Count;
-            return GetCurrJob();
+            CurrentSearchText = jobName;
+            historyList.AddAfter(historyList.Current, matchedJobs, CurrentSearchText, CurrentIndex);
+
+            return GetJobByIndex(CurrentIndex);
+        }
+
+        public AutoSysJob UndoJob()
+        {
+            History prev = historyList.Previous();
+            return RestoreJob(prev);
+        }
+
+        public AutoSysJob RedoJob()
+        {
+            History next = historyList.Next();
+            return RestoreJob(next);
+        }
+
+        public bool HasUndo()
+        {
+            return historyList.PeekPrevious() != null;
+        }
+
+        public bool HasRedo()
+        {
+            return historyList.PeekNext() != null;
+        }
+
+        private void RestoreProperties(History job)
+        {
+            matchedJobs = job?.MatchedJobs;
+            MatchedJobsCount = matchedJobs == null ? 0 : matchedJobs.Count;
+            CurrentIndex = job == null ? 0 : job.CurrentIndex;
+            CurrentSearchText = job == null ? "" : job.SearchText;
         }
 
         public void GetCalendar(string name)

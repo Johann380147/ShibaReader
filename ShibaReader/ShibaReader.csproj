@@ -10,10 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\next-arrow.png" />
+    <None Remove="Resources\previous-arrow.png" />
     <None Remove="ShibaReader.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\next-arrow.png" />
+    <Resource Include="Resources\previous-arrow.png" />
     <Resource Include="ShibaReader.ico" />
   </ItemGroup>
 
