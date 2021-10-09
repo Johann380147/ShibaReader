@@ -316,9 +316,13 @@ namespace ShibaReader.Processors
                     jobEvent.TaskComplete();
                 }
             }
-            catch (FileNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
-                MessageBox.Show("File not found!");
+                
+            }
+            catch (FileNotFoundException)
+            {
+                
             }
             return autoSysJobs;
         }

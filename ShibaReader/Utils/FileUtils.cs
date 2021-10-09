@@ -22,11 +22,22 @@ namespace ShibaReader.Utils
         
         public static int GetLineCount(string filePath)
         {
-            using (StreamReader r = new StreamReader(filePath))
+            try
             {
-                int i = 0;
-                while (r.ReadLine() != null) { i++; }
-                return i;
+                using (StreamReader r = new StreamReader(filePath))
+                {
+                    int i = 0;
+                    while (r.ReadLine() != null) { i++; }
+                    return i;
+                }
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return -1;
+            }
+            catch (FileNotFoundException)
+            {
+                return -1;
             }
         }
     }

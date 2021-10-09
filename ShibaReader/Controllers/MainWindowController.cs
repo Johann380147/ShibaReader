@@ -129,7 +129,14 @@ namespace ShibaReader.Controllers
             }
             else
             {
-                matchedJobs = autoSysJobs.Keys.Where(k => k.ToLower().Contains(jobName.ToLower())).ToList();
+                string lowerJobName = jobName.ToLower();
+                matchedJobs = autoSysJobs.Keys
+                    .Where(k => {
+                        return
+                        k.ToLower().Contains(lowerJobName) ||
+                        autoSysJobs[k].Command.ToLower().Contains(lowerJobName);
+                    })
+                    .ToList();
             }
             
             CurrentIndex = 0;

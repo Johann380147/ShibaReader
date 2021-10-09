@@ -18,33 +18,43 @@ namespace ShibaReader.Processors
         {
             Dictionary<string, Calendar> calendars = new Dictionary<string, Calendar>();
 
-
-            using (var reader = new StreamReader(FileName))
+            try
             {
-                Calendar calendar = null;
-                string line = reader.ReadLine()?.Trim();
-                while (line != null)
+                using (var reader = new StreamReader(FileName))
                 {
-                    if (line.StartsWith("calendar"))
+                    Calendar calendar = null;
+                    string line = reader.ReadLine()?.Trim();
+                    while (line != null)
                     {
-                        string param = this.ExtractParameterValue(line, "calendar");
-                        calendar = new(param);
-                        calendars.Add(param, calendar);
-                    }
-                    else if (line != "" && !line.StartsWith("description") && calendar != null)
-                    {
-                        /*
-                        string[] tokens = line.Split(" ");
-                        string[] date = tokens[0].Split("/");
-                        string[] time = tokens[1].Split(":");
+                        if (line.StartsWith("calendar"))
+                        {
+                            string param = this.ExtractParameterValue(line, "calendar");
+                            calendar = new(param);
+                            calendars.Add(param, calendar);
+                        }
+                        else if (line != "" && !line.StartsWith("description") && calendar != null)
+                        {
+                            /*
+                            string[] tokens = line.Split(" ");
+                            string[] date = tokens[0].Split("/");
+                            string[] time = tokens[1].Split(":");
 
-                        int day = StringUtils.ToInteger(date[1]), month = StringUtils.ToInteger(date[0]), year = StringUtils.ToInteger(date[2]);
-                        int hour = StringUtils.ToInteger(time[0]), min = StringUtils.ToInteger(time[1]), sec = StringUtils.ToInteger(time[2]);
-                        */
-                        calendar.DateTimes.Add(line);
+                            int day = StringUtils.ToInteger(date[1]), month = StringUtils.ToInteger(date[0]), year = StringUtils.ToInteger(date[2]);
+                            int hour = StringUtils.ToInteger(time[0]), min = StringUtils.ToInteger(time[1]), sec = StringUtils.ToInteger(time[2]);
+                            */
+                            calendar.DateTimes.Add(line);
+                        }
+                        line = reader.ReadLine()?.Trim();
                     }
-                    line = reader.ReadLine()?.Trim();
                 }
+            }
+            catch (DirectoryNotFoundException)
+            {
+
+            }
+            catch (FileNotFoundException)
+            {
+
             }
             return calendars;
         }
