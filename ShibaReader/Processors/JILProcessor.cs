@@ -24,6 +24,8 @@ namespace ShibaReader.Processors
         public Dictionary<string, AutoSysJob> ProcessJILFile()
         {
             Dictionary<string, AutoSysJob> autoSysJobs = new Dictionary<string, AutoSysJob>();
+            if (FileName == "") return autoSysJobs;
+
             try
             {
                 int totalLineCount = FileUtils.GetLineCount(FileName);

@@ -17,6 +17,7 @@ namespace ShibaReader.Processors
         public Dictionary<string, Calendar> ProcessCALFile()
         {
             Dictionary<string, Calendar> calendars = new Dictionary<string, Calendar>();
+            if (FileName == "") return calendars;
 
             try
             {
