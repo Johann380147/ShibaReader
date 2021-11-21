@@ -10,12 +10,14 @@
 
   <ItemGroup>
     <None Remove="Resources\redo-arrow.png" />
+    <None Remove="Resources\search.png" />
     <None Remove="Resources\undo-arrow.png" />
     <None Remove="ShibaReader.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\redo-arrow.png" />
+    <Resource Include="Resources\search.png" />
     <Resource Include="Resources\undo-arrow.png" />
     <Resource Include="ShibaReader.ico" />
   </ItemGroup>

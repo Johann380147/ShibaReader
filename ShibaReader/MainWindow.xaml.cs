@@ -127,17 +127,25 @@ namespace ShibaReader
         {
             if (e.Key == Key.Return)
             {
-                if (prevSearchText == SearchText.Text)
-                {
-                    NextJobBtn_Click(null, null);
-                }
-                else
-                {
-                    AutoSysJob = controller.SearchJob(SearchText.Text);
-                    UpdateUI();
-                }
-                prevSearchText = SearchText.Text;
+                SearchBtn_Click(null, null);
             }
+        }
+
+        private void SearchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchText.Text == "") return;
+
+            if (prevSearchText == SearchText.Text)
+            {
+                NextJobBtn_Click(null, null);
+            }
+            else
+            {
+                AutoSysJob = controller.SearchJob(SearchText.Text);
+                UpdateUI();
+            }
+            prevSearchText = SearchText.Text;
+            SearchText.Focus();
         }
 
         private void JobDetailed_LinkedJobBtnClicked(object sender, RoutedEventArgs e)
