@@ -99,22 +99,45 @@
                     </Label>
                 </StackPanel>
             </DockPanel>
-            
-            
-            <Label x:Name="jobNameText" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" MinHeight="42">
-                <TextBox Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.JobName}"></TextBox>
-            </Label>
-            <Separator/>
         </StackPanel>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel CanVerticallyScroll="True">
-                <view:JobDetailedDisplay Margin="0,10,0,0" 
+        <TabControl>
+            <TabItem Header="Detail">
+                <StackPanel>
+                    <Label x:Name="jobNameText" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" MinHeight="42">
+                        <TextBox Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.JobName}"></TextBox>
+                    </Label>
+                    <Separator/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel CanVerticallyScroll="True">
+                            <view:JobDetailedDisplay Margin="0,10,0,0" 
                                          LinkedJobBtnClicked="JobDetailed_LinkedJobBtnClicked"
                                          ScheduleBtnClicked="JobDetailedDisplay_ScheduleBtnClicked"
                                          ExcludeCalBtnClicked="JobDetailedDisplay_ExcludeCalBtnClicked"/>
-            </StackPanel>
+                        </StackPanel>
 
-        </ScrollViewer>
+                    </ScrollViewer>
+                </StackPanel>
+                
+            </TabItem>
+            <TabItem Header="List">
+                <StackPanel>
+                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding MatchedAutoSysJob}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Text="{Binding JobName}"/>
+                                    <TextBox Grid.Column="1" Text="{Binding Command}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 
 </Window>

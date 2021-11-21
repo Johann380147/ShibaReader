@@ -91,7 +91,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBox}">
-                    <Border x:Name="Bd" BorderBrush="#efebe9" BorderThickness="{TemplateBinding BorderThickness}" Background="#efebe9" SnapsToDevicePixels="true">
+                    <Border x:Name="Bd" BorderBrush="#efebe9" BorderThickness="{TemplateBinding BorderThickness}" Background="#efebe9" Padding="2" SnapsToDevicePixels="true">
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </ScrollViewer>

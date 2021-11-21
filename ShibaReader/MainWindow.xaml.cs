@@ -3,6 +3,7 @@ using ShibaReader.Events;
 using ShibaReader.Models;
 using ShibaReader.Utils;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -24,8 +25,20 @@ namespace ShibaReader
         private string prevSearchText = "";
         private int numOfJobs = 0;
         private int numOfCalendars = 0;
+        private List<AutoSysJob> matchedAutoSysJob = new();
         private AutoSysJob autoSysJob = null;
         private string currentPositionText = "0 of 0";
+
+        public List<AutoSysJob> MatchedAutoSysJob
+        {
+            get => matchedAutoSysJob;
+            set
+            {
+                matchedAutoSysJob = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public AutoSysJob AutoSysJob
         {
             get => autoSysJob; 
@@ -120,6 +133,7 @@ namespace ShibaReader
                 else
                 {
                     AutoSysJob = controller.SearchJob(SearchText.Text);
+                    MatchedAutoSysJob = controller.GetAllMatchedJobs();
                     UpdateUI();
                 }
                 prevSearchText = SearchText.Text;

@@ -85,6 +85,13 @@ namespace ShibaReader.Controllers
             return calendarDates.Count;
         }
 
+        public List<AutoSysJob> GetAllMatchedJobs()
+        {
+            List<AutoSysJob> matchedAutoSysJobs = new();
+            matchedJobs.ForEach(item => matchedAutoSysJobs.Add(autoSysJobs[item]));
+            return matchedAutoSysJobs;
+        }
+
         private AutoSysJob GetJobByName(string name)
         {
             if (!autoSysJobs.ContainsKey(name)) return null;
