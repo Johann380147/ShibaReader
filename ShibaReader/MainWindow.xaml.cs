@@ -45,6 +45,7 @@ namespace ShibaReader
             set
             {
                 autoSysJob = value;
+                MatchedAutoSysJob = controller.GetAllMatchedJobs();
                 NotifyPropertyChanged();
             }
         }
@@ -133,7 +134,6 @@ namespace ShibaReader
                 else
                 {
                     AutoSysJob = controller.SearchJob(SearchText.Text);
-                    MatchedAutoSysJob = controller.GetAllMatchedJobs();
                     UpdateUI();
                 }
                 prevSearchText = SearchText.Text;
@@ -240,6 +240,18 @@ namespace ShibaReader
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             controller.OpenSettings();
+        }
+
+        private void StackPanel_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                PrevJobBtn_Click(null, null);
+            }
+            else if (e.Delta < 0)
+            {
+                NextJobBtn_Click(null, null); 
+            }
         }
     }
 }

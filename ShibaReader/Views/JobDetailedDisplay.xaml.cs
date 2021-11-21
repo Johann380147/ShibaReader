@@ -41,7 +41,17 @@ namespace ShibaReader.Views
         {
             if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.C)
             {
-                Clipboard.SetText(((ListBox)sender).SelectedItem.ToString());
+                var selectedItem = ((ListBox)sender).SelectedItem;
+                var itemType = selectedItem.GetType();
+                
+                if (itemType.Equals(typeof(String)))
+                {
+                    Clipboard.SetText(selectedItem.ToString());
+                }
+                else if (itemType.Equals(typeof(ListBoxItem)))
+                {
+                    Clipboard.SetText(((ListBoxItem)selectedItem).Content.ToString());
+                }
             }
             else
             {

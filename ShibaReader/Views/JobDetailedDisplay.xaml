@@ -25,7 +25,10 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Command</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <TextBox x:Name="commandText" Style="{StaticResource selectableLabel}" Text="{Binding AutoSysJob.Command, TargetNullValue='-'}"/>
+                    <ListBox KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel">
+                        <ListBoxItem Content="{Binding AutoSysJob.Command}"/>
+                    </ListBox>
+                    
                 </Label>
             </Grid>
             <Grid>
@@ -126,7 +129,6 @@
                 <Label Grid.Column="0">Email Address (Fail):</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
                     <ListBox ItemsSource="{Binding AutoSysJob.EmailAddressesOnFailure}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
-
                 </Label>
             </Grid>
             <Grid>
@@ -136,7 +138,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Email Address (Alarm):</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox  ItemsSource="{Binding AutoSysJob.EmailAddressesOnAlarm}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
+                    <ListBox ItemsSource="{Binding AutoSysJob.EmailAddressesOnAlarm}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
                 </Label>
             </Grid>
         </StackPanel>

@@ -42,7 +42,7 @@ namespace ShibaReader.Controllers
             CALProcessor calProc = new CALProcessor(calFile);
             calendarDates = calProc.ProcessCALFile();
             
-            if (autoSysJobs == null)
+            if (autoSysJobs == null || autoSysJobs.Count == 0)
             {
                 var files = FileUtils.GetMatchingFiles((string)ApplicationProperties.GetPropertyValue(ApplicationProperties.DefaultFolderProperty), "*.jil");
                 if (files != null && files.Length != 0)
@@ -51,7 +51,7 @@ namespace ShibaReader.Controllers
                     autoSysJobs = jilProc.ProcessJILFile();
                 }
             }
-            if (calendarDates == null)
+            if (calendarDates == null || calendarDates.Count == 0)
             {
                 var files = FileUtils.GetMatchingFiles((string)ApplicationProperties.GetPropertyValue(ApplicationProperties.DefaultFolderProperty), "*calendar*.txt");
                 if (files != null && files.Length != 0)
@@ -127,7 +127,7 @@ namespace ShibaReader.Controllers
             }
             else
             {
-                CurrentIndex = 0;
+                CurrentIndex = matchedJobs.Count - 1;
             }
             historyList.Current.CurrentIndex = CurrentIndex;
             return GetJobByIndex(CurrentIndex);
