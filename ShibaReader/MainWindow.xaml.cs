@@ -1,6 +1,7 @@
 ﻿using ShibaReader.Controllers;
 using ShibaReader.Events;
 using ShibaReader.Models;
+using ShibaReader.Utils;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -112,7 +113,7 @@ namespace ShibaReader
         {
             if (e.Key == Key.Return)
             {
-                if (prevSearchText == SearchText.Text && !controller.IsLastElement)
+                if (prevSearchText == SearchText.Text)
                 {
                     NextJobBtn_Click(null, null);
                 }
@@ -129,6 +130,7 @@ namespace ShibaReader
         {
             Button source = (Button)e.OriginalSource;
             AutoSysJob = controller.SearchJob(source.Content.ToString());
+            prevSearchText = source.Content.ToString();
             UpdateUI();
         }
 
@@ -202,6 +204,28 @@ namespace ShibaReader
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             controller.Dispose();
+        }
+
+        private void SearchText_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            SearchText.Focus();
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (UndoJobBtn.IsEnabled && Keyboard.Modifiers == ModifierKeys.Alt && e.RealKey() == Key.Left)
+            {
+                UndoJobBtn_Click(null, null);
+            }
+            else if (RedoJobBtn.IsEnabled && Keyboard.Modifiers == ModifierKeys.Alt && e.RealKey() == Key.Right)
+            {
+                RedoJobBtn_Click(null, null);
+            }
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            controller.OpenSettings();
         }
     }
 }

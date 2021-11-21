@@ -10,16 +10,19 @@ namespace ShibaReader
 {
     internal static class ApplicationProperties
     {
+        private static App app = null;
         private static string appPropertiesFileName = "app.config";
-
-        public static string JilFileProperty { get; set; } = "DefaultJILFile";
-        public static string CalFileProperty { get; set; } = "DefaultCalendarFile";
+        internal static string DefaultFolderProperty { get; private set; } = "DefaultFolder";
+        internal static string JilFileProperty { get; private set; } = "DefaultJILFile";
+        internal static string CalFileProperty { get; private set; } = "DefaultCalendarFile";
 
         internal static void InitializeDefaultProperties(App app)
         {
+            ApplicationProperties.app = app;
             // Initialize application-scope property
-            app.Properties["DefaultJILFile"] = @"C:\Users\timothy.ding\Downloads\PSEA Guide\Reference Materials\autosys_20210323.jil";
-            app.Properties["DefaultCalendarFile"] = @"C:\Users\timothy.ding\Downloads\PSEA Guide\Reference Materials\autosys_calendar_20210323.txt";
+            app.Properties["DefaultFolder"] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            app.Properties["DefaultJILFile"] = @"";
+            app.Properties["DefaultCalendarFile"] = @"";
         }
 
         internal static void RetrieveProperties(App app)
@@ -27,7 +30,7 @@ namespace ShibaReader
             IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForDomain();
             try
             {
-                using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(appPropertiesFileName, FileMode.Open, storage))
+                using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(appPropertiesFileName, FileMode.Open, FileAccess.Read, FileShare.Read, storage))
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     // Restore each application-scope property individually
@@ -38,11 +41,14 @@ namespace ShibaReader
                     }
                 }
             }
-            catch (FileNotFoundException ex)
+            catch (IsolatedStorageException ex)
             {
-                // Handle when file is not found in isolated storage:
-                // * When the first application session
-                // * When file has been deleted
+                if (ex.InnerException.GetType() == typeof(FileNotFoundException))
+                {
+                    // Handle when file is not found in isolated storage:
+                    // * When the first application session
+                    // * When file has been deleted
+                }
             }
         }
 
@@ -50,7 +56,7 @@ namespace ShibaReader
         {
             // Persist application-scope property to isolated storage
             IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForDomain();
-            using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(appPropertiesFileName, FileMode.Create, storage))
+            using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(appPropertiesFileName, FileMode.Create, FileAccess.Write, FileShare.Write, storage))
             using (StreamWriter writer = new StreamWriter(stream))
             {
                 // Persist each application-scope property individually
@@ -59,6 +65,27 @@ namespace ShibaReader
                     writer.WriteLine("{0},{1}", key, app.Properties[key]);
                 }
             }
+        }
+
+        internal static void SetProperty(object property, object? value)
+        {
+            if (app.Properties.Contains(property))
+            {
+                app.Properties[property] = value;
+            }
+            else
+            {
+                app.Properties.Add(property, value);
+            }
+        }
+
+        internal static object? GetPropertyValue(object property)
+        {
+            if (app.Properties.Contains(property))
+            {
+                return app.Properties[property];
+            }
+            return null;
         }
     }
 }

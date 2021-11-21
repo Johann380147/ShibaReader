@@ -2,23 +2,28 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.18362.0</TargetFramework>
+	<TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
-	<TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
+	<UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>ShibaReader.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\next-arrow.png" />
-    <None Remove="Resources\previous-arrow.png" />
+    <None Remove="Resources\redo-arrow.png" />
+    <None Remove="Resources\undo-arrow.png" />
     <None Remove="ShibaReader.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\next-arrow.png" />
-    <Resource Include="Resources\previous-arrow.png" />
+    <Resource Include="Resources\redo-arrow.png" />
+    <Resource Include="Resources\undo-arrow.png" />
     <Resource Include="ShibaReader.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Views\SettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 
 </Project>

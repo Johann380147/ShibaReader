@@ -48,7 +48,7 @@ namespace ShibaReader.Models
         public string RunSchedule { get; set; }
         public string ExcludeSchedule { get; set; }
         public string StartTime { get; set; }
-        public ObservableCollection<Tuple<Enums.JobStatus, AutoSysJob>> RunCondition { get; set; }
+        public ObservableCollection<Tuple<Enums.JobStatus, AutoSysJob>> RunCondition { get; set; } = new();
         public string Description { get; set; }
         public string JobLogFile { get; set; }
         public string JobErrorFile { get; set; }

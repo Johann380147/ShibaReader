@@ -32,16 +32,16 @@ namespace ShibaReader.Models
 
         public History Previous()
         {
-            History temp = Current;
-            Current = temp?.Previous;
-            return temp?.Previous;
+            if (Current == null || Current.Previous == null) return null;
+            Current = Current.Previous;
+            return Current;
         }
 
         public History Next()
         {
-            History temp = Current;
-            Current = temp?.Next;
-            return temp?.Next;
+            if (Current == null || Current.Next == null) return null;
+            Current = Current.Next;
+            return Current;
         }
 
         public History PeekPrevious()
@@ -56,14 +56,14 @@ namespace ShibaReader.Models
 
         private int CalculateCountOffset(History history)
         {
-            int count = 0;
-            History node = history;
+            int count = 1;
+            History node = history?.Next;
             while (node != null)
             {
                 count--;
                 node = node?.Next;
             }
-            return count + 1;
+            return count;
         }
     }
 }

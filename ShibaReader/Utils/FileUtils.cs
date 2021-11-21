@@ -1,14 +1,32 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Windows.Forms;
 
 namespace ShibaReader.Utils
 {
     static class FileUtils
     {
+        public static FileInfo[] GetMatchingFiles(string directory, string fileNamePattern)
+        {
+            DirectoryInfo hdDirectoryInWhichToSearch = new DirectoryInfo(directory);
+            FileInfo[] filesInDir = hdDirectoryInWhichToSearch.GetFiles(fileNamePattern);
+            return filesInDir;
+        }
+
+        public static string OpenDirectoryChooser()
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.RootFolder = Environment.SpecialFolder.MyDocuments;
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                return dialog.SelectedPath;
+            }
+            return null;
+        }
         public static string OpenFileChooser(string filter)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            Microsoft.Win32.OpenFileDialog fileDialog = new Microsoft.Win32.OpenFileDialog();
             fileDialog.Filter = filter;
             fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 

@@ -7,6 +7,7 @@ using System;
 using ShibaReader.Utils;
 using ShibaReader.Events;
 using System.Collections.ObjectModel;
+using System.Text;
 
 namespace ShibaReader.Processors
 {
@@ -180,38 +181,43 @@ namespace ShibaReader.Processors
                             else if (line.StartsWith("condition"))
                             {
                                 string param = ExtractParameterValue(line, "condition");
-                                string conditionTypeText = param.Substring(0, 1);
-                                Enums.JobStatus conditionType = Enums.JobStatus.Success;
-                                switch (conditionTypeText)
+                                string[] conditions = param.Split(new char[] { '&', '|' });
+                                for (int i = 0; i < conditions.Length; i++)
                                 {
-                                    case "s":
-                                        conditionType = Enums.JobStatus.Success;
-                                        break;
-                                    case "d":
-                                        conditionType = Enums.JobStatus.Done;
-                                        break;
-                                    case "f":
-                                        conditionType = Enums.JobStatus.Failure;
-                                        break;
-                                    case "t":
-                                        conditionType = Enums.JobStatus.Terminated;
-                                        break;
-                                    case "n":
-                                        conditionType = Enums.JobStatus.Notrunning;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                string conditionJobText = param.Substring(2, param.Length - 3);
-                                if (autoSysJobs.ContainsKey(conditionJobText))
-                                {
-                                    job.RunCondition = new ObservableCollection<Tuple<Enums.JobStatus, AutoSysJob>>();
-                                    job.RunCondition.Add(new Tuple<Enums.JobStatus, AutoSysJob>(conditionType, autoSysJobs[conditionJobText]));
-                                }
-                                else
-                                {
-                                    autoSysJobs.Add(conditionJobText, new AutoSysJob(conditionJobText));
-                                    job.RunCondition = new ObservableCollection<Tuple<Enums.JobStatus, AutoSysJob>>();
+                                    string[] condition = conditions[i].Split(new char[] { '(', ')' });
+                                    string conditionTypeText = condition[0].Trim();
+                                    Enums.JobStatus conditionType = Enums.JobStatus.None;
+                                    switch (conditionTypeText.ToString())
+                                    {
+                                        case "Success":
+                                        case "s":
+                                            conditionType = Enums.JobStatus.Success;
+                                            break;
+                                        case "Done":
+                                        case "d":
+                                            conditionType = Enums.JobStatus.Done;
+                                            break;
+                                        case "Failure":
+                                        case "f":
+                                            conditionType = Enums.JobStatus.Failure;
+                                            break;
+                                        case "Terminated":
+                                        case "t":
+                                            conditionType = Enums.JobStatus.Terminated;
+                                            break;
+                                        case "Notrunning":
+                                        case "n":
+                                            conditionType = Enums.JobStatus.Notrunning;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    
+                                    string conditionJobText = condition[1].Trim();
+                                    if (!autoSysJobs.ContainsKey(conditionJobText))
+                                    {
+                                        autoSysJobs.Add(conditionJobText, new AutoSysJob(conditionJobText));
+                                    }
                                     job.RunCondition.Add(new Tuple<Enums.JobStatus, AutoSysJob>(conditionType, autoSysJobs[conditionJobText]));
                                 }
                             }

@@ -15,11 +15,12 @@
 
         public enum JobStatus
         {
-            Failure = 0,
-            Success = 1,
-            Done = 2,
-            Terminated = 3,
-            Notrunning = 4
+            None = 0,
+            Failure = 1,
+            Success = 2,
+            Done = 3,
+            Terminated = 4,
+            Notrunning = 5
         }
 
         public enum Permission

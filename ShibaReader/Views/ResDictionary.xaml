@@ -7,10 +7,6 @@
         <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
     </Style>
 
-    <Style TargetType="ListBox" x:Key="labelListBox">
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Focusable" Value="False"/>
-    </Style>
     <Style TargetType="ItemsControl" x:Key="labelItemsControl">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Focusable" Value="False"/>
@@ -45,7 +41,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border CornerRadius="3"
-                            Background="{TemplateBinding Background}">
+                            Background="{TemplateBinding Background}" 
+                            Padding="3">
                         <ContentPresenter x:Name="IconButtonContentPresenter" 
                                           Content="{TemplateBinding Content}"
                                           HorizontalAlignment="Center" 
@@ -86,15 +83,15 @@
             </Style>
         </Style.Resources>
     </Style>
+    
     <Style TargetType="ListBox">
         <Setter Property="Background" Value="#efebe9"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Padding" Value="0"/>
         
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBox}">
-                    <Border x:Name="Bd" BorderBrush="#efebe9" BorderThickness="{TemplateBinding BorderThickness}" Background="#efebe9" Padding="0" SnapsToDevicePixels="true">
+                    <Border x:Name="Bd" BorderBrush="#efebe9" BorderThickness="{TemplateBinding BorderThickness}" Background="#efebe9" SnapsToDevicePixels="true">
                         <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </ScrollViewer>
@@ -114,47 +111,31 @@
 
     <Style TargetType="ListBoxItem">
         <Setter Property="Background" Value="#efebe9"/>
-        <Setter Property="Padding" Value="0"/>
     </Style>
 
-    <Style x:Key="WatermarkedTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+    <Style x:Key="WatermarkedTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Grid>
-                        <TextBox Text="{Binding Path=Text,
-                                                RelativeSource={RelativeSource TemplatedParent}, 
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}"
-                                 x:Name="textSource" 
-                                 Background="{TemplateBinding Background}"
-                                 VerticalContentAlignment="Center"
-                                 Padding="3,1,3,1"
-                                 Panel.ZIndex="2" />
-                        <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
-                            <TextBox.Style>
-                                <Style TargetType="{x:Type TextBox}">
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Foreground" Value="Transparent"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
-                                            <Setter Property="Foreground" Value="LightGray"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
+                        <Border Background="White" BorderBrush="#FF7D8683" BorderThickness="1" CornerRadius="3"/>
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" VerticalAlignment="Center"
+                               Visibility="Collapsed" Foreground="Gray" HorizontalAlignment="Center" Cursor="IBeam"/>
                     </Grid>
-
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="FocusManager.FocusedElement" TargetName="textSource" Value="{Binding RelativeSource={RelativeSource Self}}" />
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value=""/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="DimGray"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
 </ResourceDictionary>

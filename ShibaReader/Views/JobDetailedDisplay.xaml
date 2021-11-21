@@ -45,7 +45,13 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Days Ran:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.DaysToRun}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
+                    <ItemsControl Style="{StaticResource labelItemsControl}" ItemsSource="{Binding AutoSysJob.DaysToRun}" PreviewMouseWheel="HandlePreviewMouseWheel">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBox Style="{StaticResource selectableLabel}" Text="{Binding .}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Label>
             </Grid>
             <Grid>
@@ -75,7 +81,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Condition:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ItemsControl Style="{StaticResource labelItemsControl}" ItemsSource="{Binding AutoSysJob.RunCondition}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel">
+                    <ItemsControl Style="{StaticResource labelItemsControl}" ItemsSource="{Binding AutoSysJob.RunCondition}" PreviewMouseWheel="HandlePreviewMouseWheel">
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -119,7 +125,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Email Address (Fail):</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.EmailAddressesOnFailure}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
+                    <ListBox ItemsSource="{Binding AutoSysJob.EmailAddressesOnFailure}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
 
                 </Label>
             </Grid>
@@ -130,7 +136,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Email Address (Alarm):</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.EmailAddressesOnAlarm}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
+                    <ListBox  ItemsSource="{Binding AutoSysJob.EmailAddressesOnAlarm}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
                 </Label>
             </Grid>
         </StackPanel>
@@ -172,7 +178,13 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Permissions:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.Permissions}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
+                    <ItemsControl Style="{StaticResource labelItemsControl}" ItemsSource="{Binding AutoSysJob.Permissions}" PreviewMouseWheel="HandlePreviewMouseWheel">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBox Style="{StaticResource selectableLabel}" Text="{Binding .}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Label>
             </Grid>
             <Grid>
@@ -242,7 +254,13 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Send alarm:</Label>
                 <Label Grid.Column="1" FontWeight="DemiBold">
-                    <ListBox Style="{StaticResource labelListBox}" ItemsSource="{Binding AutoSysJob.NotificationAlarmTypes}" KeyUp="ListBox_KeyUp" PreviewMouseWheel="HandlePreviewMouseWheel"></ListBox>
+                    <ItemsControl Style="{StaticResource labelItemsControl}" ItemsSource="{Binding AutoSysJob.NotificationAlarmTypes}" PreviewMouseWheel="HandlePreviewMouseWheel">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBox Style="{StaticResource selectableLabel}" Text="{Binding .}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Label>
             </Grid>
             <Grid>

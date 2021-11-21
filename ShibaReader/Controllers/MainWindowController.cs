@@ -41,6 +41,25 @@ namespace ShibaReader.Controllers
             autoSysJobs = jilProc.ProcessJILFile();
             CALProcessor calProc = new CALProcessor(calFile);
             calendarDates = calProc.ProcessCALFile();
+            
+            if (autoSysJobs == null)
+            {
+                var files = FileUtils.GetMatchingFiles((string)ApplicationProperties.GetPropertyValue(ApplicationProperties.DefaultFolderProperty), "*.jil");
+                if (files != null && files.Length != 0)
+                {
+                    jilProc.FileName = files[0].FullName;
+                    autoSysJobs = jilProc.ProcessJILFile();
+                }
+            }
+            if (calendarDates == null)
+            {
+                var files = FileUtils.GetMatchingFiles((string)ApplicationProperties.GetPropertyValue(ApplicationProperties.DefaultFolderProperty), "*calendar*.txt");
+                if (files != null && files.Length != 0)
+                {
+                    calProc.FileName = files[0].FullName;
+                    calendarDates = calProc.ProcessCALFile();
+                }
+            }
         }
 
         public int ImportJILFile()
@@ -98,10 +117,13 @@ namespace ShibaReader.Controllers
             if (CurrentIndex - 1 >= 0)
             {
                 CurrentIndex--;
-                historyList.Current.CurrentIndex = CurrentIndex;
-                return GetJobByIndex(CurrentIndex);
             }
-            return null;
+            else
+            {
+                CurrentIndex = 0;
+            }
+            historyList.Current.CurrentIndex = CurrentIndex;
+            return GetJobByIndex(CurrentIndex);
         }
 
         public AutoSysJob GetNextJob()
@@ -110,12 +132,14 @@ namespace ShibaReader.Controllers
 
             if (CurrentIndex + 1 < matchedJobs.Count)
             {
-
                 CurrentIndex++;
-                historyList.Current.CurrentIndex = CurrentIndex;
-                return GetJobByIndex(CurrentIndex);
             }
-            return null;
+            else
+            {
+                CurrentIndex = 0;
+            }
+            historyList.Current.CurrentIndex = CurrentIndex;
+            return GetJobByIndex(CurrentIndex);
         }
 
         public AutoSysJob SearchJob(string jobName)
@@ -124,23 +148,24 @@ namespace ShibaReader.Controllers
 
             if (autoSysJobs.ContainsKey(jobName))
             {
-                matchedJobs.Clear();
+                matchedJobs = new();
                 matchedJobs.Add(jobName);
             }
             else
             {
                 string lowerJobName = jobName.ToLower();
                 matchedJobs = autoSysJobs.Keys
-                    .Where(k => {
-                        return
-                        k.ToLower().Contains(lowerJobName) ||
-                        autoSysJobs[k].Command.ToLower().Contains(lowerJobName);
+                    .Where(k =>
+                    {
+                        if (k.ToLower().Contains(lowerJobName)) return true;
+                        if (autoSysJobs[k].Command == null) return false;
+                        else return autoSysJobs[k].Command.ToLower().Contains(lowerJobName); 
                     })
                     .ToList();
             }
-            
-            CurrentIndex = 0;
+
             MatchedJobsCount = matchedJobs.Count;
+            CurrentIndex = 0;
             CurrentSearchText = jobName;
             historyList.AddAfter(historyList.Current, matchedJobs, CurrentSearchText, CurrentIndex);
 
@@ -184,6 +209,11 @@ namespace ShibaReader.Controllers
                 calendarView.SetCalendar(calendarDates[name]);
                 calendarView.Show();
             }
+        }
+
+        public void OpenSettings()
+        {
+            new SettingsView().ShowDialog();
         }
 
         public int GetJobCount()
