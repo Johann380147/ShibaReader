@@ -9,9 +9,15 @@ namespace ShibaReader.Utils
     {
         public static FileInfo[] GetMatchingFiles(string directory, string fileNamePattern)
         {
-            DirectoryInfo hdDirectoryInWhichToSearch = new DirectoryInfo(directory);
-            FileInfo[] filesInDir = hdDirectoryInWhichToSearch.GetFiles(fileNamePattern);
-            return filesInDir;
+            try
+            {
+                DirectoryInfo hdDirectoryInWhichToSearch = new DirectoryInfo(directory);
+                FileInfo[] filesInDir = hdDirectoryInWhichToSearch.GetFiles(fileNamePattern);
+                return filesInDir;
+            } catch (DirectoryNotFoundException)
+            {
+                return null;
+            }
         }
 
         public static string OpenDirectoryChooser()
